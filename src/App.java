@@ -19,6 +19,7 @@ public class App {
         frame.add(fb, BorderLayout.CENTER);
         // not including title bar
         frame.pack();
+        fb.requestFocus();
         frame.setVisible(true);
 
     }
