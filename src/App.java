@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 
 
 public class App {
@@ -9,10 +10,16 @@ public class App {
 
         // create new frame, title it, and place in center of screen
         JFrame frame = new JFrame("Flappy Bird");
-        frame.setVisible(true);
         frame.setSize(boardWidth, boardHeight);
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        FlappyBird fb = new FlappyBird();
+        frame.add(fb, BorderLayout.CENTER);
+        // not including title bar
+        frame.pack();
+        frame.setVisible(true);
+
     }
 }
