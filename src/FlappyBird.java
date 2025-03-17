@@ -120,7 +120,6 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
     }
 
     public void draw(Graphics g) {
-        // System.out.println("Drawing");
 
         // draw background image
         g.drawImage(backgroundImage, 0, 0, boardWidth, boardHeight, null);

@@ -5,8 +5,11 @@ import java.awt.event.ActionEvent;
 
 public class Menu extends JPanel {
     private JButton startButton;
+    private JButton instructionButton;
     private final int menuHeight = 500;
     private final int menuWidth = 360;
+    private final Image backgroundImage = new ImageIcon(getClass().getResource("Assets/flappybirdbg.png")).getImage();
+    ;
 
     Menu() {
         setPreferredSize(new Dimension(menuWidth, menuHeight));
@@ -14,10 +17,13 @@ public class Menu extends JPanel {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
 
+
         startButton = new JButton("Start game");
-        startButton.setBackground(Color.black);
+        startButton.setBackground(Color.BLUE);
         startButton.setFont(new Font("Arial", Font.PLAIN, 20));
         startButton.setForeground(Color.white);
+
+
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -35,5 +41,14 @@ public class Menu extends JPanel {
         gbc.gridy = 0;
 
         add(startButton, gbc);
+    }
+
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        draw(g);
+    }
+
+    public void draw(Graphics g) {
+        g.drawImage(backgroundImage, 0, 0, menuWidth, menuHeight, null);
     }
 }
