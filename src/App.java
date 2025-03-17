@@ -16,7 +16,9 @@ public class App {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         FlappyBird fb = new FlappyBird();
-        frame.add(fb, BorderLayout.CENTER);
+        Menu menu = new Menu();
+        frame.add(menu, BorderLayout.CENTER);
+//        frame.add(fb, BorderLayout.CENTER);
         // not including title bar
         frame.pack();
         fb.requestFocus();
