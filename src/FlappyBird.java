@@ -119,15 +119,13 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
     }
 
     public boolean touchedPipes() {
-        for (int i = 0; i < topPipes.size(); i++) {
-            Pipe topPipe = topPipes.get(i);
-            Pipe bottomPipe = bottomPipes.get(i);
-            if (bird.x + bird.width >= topPipe.x && bird.x <= topPipe.x + topPipe.width) {
-                if (bird.y <= topPipe.y + topPipe.height || bird.y + bird.height >= bottomPipe.y) {
-                    return true;
-                }
+
+        if (topPipes.size() > 0 && bird.x + bird.width >= topPipes.getLast().x && bird.x <= topPipes.getLast().x + topPipes.getLast().width) {
+            if (bird.y <= topPipes.getLast().y + topPipes.getLast().height || bird.y + bird.height >= bottomPipes.getLast().y) {
+                return true;
             }
         }
+
         return false;
     }
 
