@@ -6,22 +6,24 @@ import javax.swing.*;
 
 // inherit from JPanel
 public class FlappyBird extends JPanel implements ActionListener, KeyListener {
-    final int boardWidth = 360;
-    final int boardHeight = 640;
+    private final int boardWidth = 360;
+    private final int boardHeight = 640;
 
     // Images
-    final Image backgroundImage;
-    final Image birdImage;
-    final Image topPipeImage;
-    final Image bottomPipeImage;
+    private final Image backgroundImage;
+    private final Image birdImage;
+    private final Image topPipeImage;
+    private final Image bottomPipeImage;
 
     // Bird dimensions
-    final int birdWidth = 34;
-    final int birdHeight = 24;
+    private final int birdWidth = 34;
+    private final int birdHeight = 24;
 
     // Bird starting position
-    int birdX = boardWidth / 8;
-    int birdY = boardWidth / 2;
+    private int birdX = boardWidth / 8;
+    private int birdY = boardWidth / 2;
+
+    private int score = 0;
 
 
     class Bird {
@@ -151,10 +153,7 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
             g.drawImage(topPipeImage, topPipe.x, topPipe.y, topPipe.width, topPipe.height, null);
             g.drawImage(bottomPipeImage, topPipe.x, bottomPipe.y, bottomPipe.width, bottomPipe.height, null);
         }
-//        for (int i = 0; i < bottomPipes.size(); i++) {
-//            Pipe bottomPipe = bottomPipes.get(i);
-//            g.drawImage(bottomPipeImage, bottomPipe.x, bottomPipe.y, bottomPipe.width, bottomPipe.height, null);
-//        }
+
     }
 
     public void move() {
@@ -170,6 +169,11 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
             Pipe bottomPipe = bottomPipes.get(i);
             topPipe.x += velocityX;
             bottomPipe.x += velocityX;
+            if (!topPipe.passed && bird.x > topPipe.x) {
+                topPipe.passed = true;
+                score++;
+                System.out.println("Score: " + score);
+            }
         }
     }
 
