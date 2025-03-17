@@ -39,10 +39,10 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
     }
 
     // Pipes
-    int pipeX = boardWidth;
-    int pipeY = 0;
-    final int pipeWidth = 64;
-    final int pipeHeight = 512;
+    private int pipeX = boardWidth;
+    private int pipeY = 0;
+    private final int pipeWidth = 64;
+    private final int pipeHeight = 512;
 
     class Pipe {
         int x = pipeX;
@@ -61,9 +61,9 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
 
     // game logic
     Bird bird;
-    int velocityX = -4;
-    int velocityY = 0;
-    int gravity = 1;
+    private int velocityX = -4;
+    private int velocityY = 0;
+    private int gravity = 1;
     Random rand = new Random();
 
     ArrayList<Pipe> topPipes;
