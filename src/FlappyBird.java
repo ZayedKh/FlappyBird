@@ -66,7 +66,7 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
 
     ArrayList<Pipe> topPipes;
     ArrayList<Pipe> bottomPipes;
-    final int gap = birdHeight + 70;
+    final int gap = birdHeight + 95;
     Timer gameLoop;
     Timer placePipesTimer;
 
@@ -88,7 +88,7 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
         bottomPipes = new ArrayList<>();
 
         //place pipes timer
-        placePipesTimer = new Timer(1500, new ActionListener() {
+        placePipesTimer = new Timer(2000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 placePipes();
