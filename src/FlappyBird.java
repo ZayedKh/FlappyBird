@@ -203,4 +203,36 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
     public void keyReleased(KeyEvent e) {
 
     }
+
+    public Rectangle getBirdBounds() {
+        return new Rectangle(bird.x, bird.y, bird.width, bird.height);
+    }
+
+    public Rectangle getTopPipeBounds() {
+        try {
+            Pipe pipe = topPipes.getLast();
+            return new Rectangle(pipe.x, pipe.y, pipe.width, pipe.height);
+        } catch (Exception e) {
+            return new Rectangle(0, 0, 0, 0);
+        }
+    }
+
+    public Rectangle getBottomPipeBounds() {
+        try {
+            Pipe pipe = bottomPipes.getLast();
+            return new Rectangle(pipe.x, pipe.y, pipe.width, pipe.height);
+        } catch (Exception e) {
+            return new Rectangle(0, 0, 0, 0);
+        }
+    }
+
+    public boolean checkCollision() {
+        Rectangle birdBounds = getBirdBounds();
+
+        if (birdBounds.intersects(getTopPipeBounds()) || birdBounds.intersects(getBottomPipeBounds())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
