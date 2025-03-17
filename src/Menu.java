@@ -23,6 +23,10 @@ public class Menu extends JPanel {
         startButton.setFont(new Font("Arial", Font.PLAIN, 20));
         startButton.setForeground(Color.white);
 
+        instructionButton = new JButton("Instructions");
+        instructionButton.setBackground(Color.BLUE);
+        instructionButton.setFont(new Font("Arial", Font.PLAIN, 20));
+        instructionButton.setForeground(Color.white);
 
         startButton.addActionListener(new ActionListener() {
             @Override
@@ -34,6 +38,19 @@ public class Menu extends JPanel {
                 frame.add(fb, BorderLayout.CENTER);
                 frame.pack();
                 fb.requestFocus();
+            }
+        });
+
+        instructionButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // remove menu and start game
+                JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(Menu.this);
+                frame.remove(Menu.this);
+                Instructions instructions = new Instructions();
+                frame.add(instructions, BorderLayout.CENTER);
+                frame.pack();
+                instructions.requestFocus();
             }
         });
 
