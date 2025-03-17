@@ -27,6 +27,7 @@ public class Menu extends JPanel {
         instructionButton.setBackground(Color.BLUE);
         instructionButton.setFont(new Font("Arial", Font.PLAIN, 20));
         instructionButton.setForeground(Color.white);
+        instructionButton.setLayout(new FlowLayout());
 
         startButton.addActionListener(new ActionListener() {
             @Override

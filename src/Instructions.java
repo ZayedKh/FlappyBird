@@ -12,6 +12,8 @@ public class Instructions extends JPanel {
         gbc.insets = new Insets(10, 10, 10, 10);
 
         JLabel instructions = new JLabel("<html>Instructions:<br>Press the space bar to make the bird fly.<br>Don't let the bird hit the pipes.<br>Every pipe you pass gives you a point.<br>Good luck!</html>");
+        instructions.setFont(new Font("Arial", Font.PLAIN, 20));
+
     }
 
 }
