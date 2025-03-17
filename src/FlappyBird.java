@@ -6,18 +6,18 @@ import javax.swing.*;
 
 // inherit from JPanel
 public class FlappyBird extends JPanel implements ActionListener, KeyListener {
-    int boardWidth = 360;
-    int boardHeight = 640;
+    final int boardWidth = 360;
+    final int boardHeight = 640;
 
     // Images
-    Image backgroundImage;
-    Image birdImage;
-    Image topPipeImage;
-    Image bottomPipeImage;
+    final Image backgroundImage;
+    final Image birdImage;
+    final Image topPipeImage;
+    final Image bottomPipeImage;
 
     // Bird dimensions
-    int birdWidth = 34;
-    int birdHeight = 24;
+    final int birdWidth = 34;
+    final int birdHeight = 24;
 
     // Bird starting position
     int birdX = boardWidth / 8;
@@ -39,8 +39,8 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
     // Pipes
     int pipeX = boardWidth;
     int pipeY = 0;
-    int pipeWidth = 64;
-    int pipeHeight = 512;
+    final int pipeWidth = 64;
+    final int pipeHeight = 512;
 
     class Pipe {
         int x = pipeX;
@@ -55,6 +55,8 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
         }
     }
 
+    // We need the gap between both pipes to be the height of the bird and then some
+
     // game logic
     Bird bird;
     int velocityX = -4;
@@ -62,8 +64,9 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
     int gravity = 1;
     Random rand = new Random();
 
-    ArrayList<Pipe> pipes;
-
+    ArrayList<Pipe> topPipes;
+    ArrayList<Pipe> bottomPipes;
+    final int gap = birdHeight + 70;
     Timer gameLoop;
     Timer placePipesTimer;
 
@@ -81,7 +84,8 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
 
         // bird
         bird = new Bird(birdImage);
-        pipes = new ArrayList<>();
+        topPipes = new ArrayList<>();
+        bottomPipes = new ArrayList<>();
 
         //place pipes timer
         placePipesTimer = new Timer(1500, new ActionListener() {
@@ -99,10 +103,14 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
 
     }
 
+    // we want to place the bottom pipe at topPipe.y + topPipe.height + gap
     public void placePipes() {
         Pipe topPipe = new Pipe(topPipeImage);
+        Pipe bottomPipe = new Pipe(bottomPipeImage);
         topPipe.y -= rand.nextInt(topPipe.height - 20);
-        pipes.add(topPipe);
+        bottomPipe.y = topPipe.y + topPipe.height + gap;
+        topPipes.add(topPipe);
+        bottomPipes.add(bottomPipe);
     }
 
     public void paintComponent(Graphics g) {
@@ -119,11 +127,18 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
         // draw background image
         g.drawImage(birdImage, bird.x, bird.y, birdWidth, birdHeight, null);
 
+
         // draw pipes
-        for (int i = 0; i < pipes.size(); i++) {
-            Pipe pipe = pipes.get(i);
-            g.drawImage(topPipeImage, pipe.x, pipe.y, pipe.width, pipe.height, null);
+        for (int i = 0; i < topPipes.size(); i++) {
+            Pipe topPipe = topPipes.get(i);
+            Pipe bottomPipe = bottomPipes.get(i);
+            g.drawImage(topPipeImage, topPipe.x, topPipe.y, topPipe.width, topPipe.height, null);
+            g.drawImage(bottomPipeImage, topPipe.x, bottomPipe.y, bottomPipe.width, bottomPipe.height, null);
         }
+//        for (int i = 0; i < bottomPipes.size(); i++) {
+//            Pipe bottomPipe = bottomPipes.get(i);
+//            g.drawImage(bottomPipeImage, bottomPipe.x, bottomPipe.y, bottomPipe.width, bottomPipe.height, null);
+//        }
     }
 
     public void move() {
@@ -134,9 +149,11 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
         bird.y = Math.min(boardHeight - birdHeight, bird.y);
 
         // move pipes
-        for (int i = 0; i < pipes.size(); i++) {
-            Pipe pipe = pipes.get(i);
-            pipe.x += velocityX;
+        for (int i = 0; i < topPipes.size(); i++) {
+            Pipe topPipe = topPipes.get(i);
+            Pipe bottomPipe = bottomPipes.get(i);
+            topPipe.x += velocityX;
+            bottomPipe.x += velocityX;
         }
     }
 
