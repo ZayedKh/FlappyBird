@@ -154,6 +154,10 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
             g.drawImage(bottomPipeImage, topPipe.x, bottomPipe.y, bottomPipe.width, bottomPipe.height, null);
         }
 
+        g.setFont(new Font("Arial", Font.BOLD, 20));
+        g.setColor(Color.WHITE);
+        g.drawString("Score: " + score, 10, 30);
+
     }
 
     public void move() {
@@ -172,7 +176,6 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
             if (!topPipe.passed && bird.x > topPipe.x) {
                 topPipe.passed = true;
                 score++;
-                System.out.println("Score: " + score);
             }
         }
     }
