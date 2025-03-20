@@ -127,8 +127,6 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
 
         // draw background image
         g.drawImage(birdImage, bird.x, bird.y, birdWidth, birdHeight, null);
-        g.setColor(Color.RED);
-        g.drawRect(bird.x, bird.y, bird.width, bird.height);
 
 
         // draw pipes
@@ -137,10 +135,6 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
             Pipe bottomPipe = bottomPipes.get(i);
             g.drawImage(topPipeImage, topPipe.x, topPipe.y, topPipe.width, topPipe.height, null);
             g.drawImage(bottomPipeImage, topPipe.x, bottomPipe.y, bottomPipe.width, bottomPipe.height, null);
-
-            g.setColor(Color.RED);
-            g.drawRect(topPipe.x, topPipe.y, topPipe.width, topPipe.height);
-            g.drawRect(bottomPipe.x, bottomPipe.y, bottomPipe.width, bottomPipe.height);
         }
 
         g.setFont(new Font("Arial", Font.BOLD, 20));
