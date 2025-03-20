@@ -71,6 +71,7 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
     final int gap = birdHeight + 95;
     Timer gameLoop;
     Timer placePipesTimer;
+    private boolean collisionDetected = false;
 
 
     FlappyBird() {
@@ -126,6 +127,8 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
 
         // draw background image
         g.drawImage(birdImage, bird.x, bird.y, birdWidth, birdHeight, null);
+        g.setColor(Color.RED);
+        g.drawRect(bird.x, bird.y, bird.width, bird.height);
 
 
         // draw pipes
@@ -134,6 +137,10 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
             Pipe bottomPipe = bottomPipes.get(i);
             g.drawImage(topPipeImage, topPipe.x, topPipe.y, topPipe.width, topPipe.height, null);
             g.drawImage(bottomPipeImage, topPipe.x, bottomPipe.y, bottomPipe.width, bottomPipe.height, null);
+
+            g.setColor(Color.RED);
+            g.drawRect(topPipe.x, topPipe.y, topPipe.width, topPipe.height);
+            g.drawRect(bottomPipe.x, bottomPipe.y, bottomPipe.width, bottomPipe.height);
         }
 
         g.setFont(new Font("Arial", Font.BOLD, 20));
@@ -166,7 +173,8 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
     public void actionPerformed(ActionEvent e) {
         move();
         repaint();
-        if (checkCollision()) {
+        collisionDetected = checkCollision();
+        if (collisionDetected) {
             gameLoop.stop();
         }
         repaint();
@@ -196,7 +204,7 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
 
     public Rectangle getTopPipeBounds() {
         try {
-            Pipe pipe = topPipes.getLast();
+            Pipe pipe = topPipes.get(topPipes.size() - 2);
             return new Rectangle(pipe.x, pipe.y, pipe.width, pipe.height);
         } catch (Exception e) {
             return new Rectangle(0, 0, 0, 0);
@@ -205,7 +213,7 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
 
     public Rectangle getBottomPipeBounds() {
         try {
-            Pipe pipe = bottomPipes.getLast();
+            Pipe pipe = bottomPipes.get(bottomPipes.size() - 2);
             return new Rectangle(pipe.x, pipe.y, pipe.width, pipe.height);
         } catch (Exception e) {
             return new Rectangle(0, 0, 0, 0);
@@ -216,6 +224,7 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
         Rectangle birdBounds = getBirdBounds();
 
         if (birdBounds.intersects(getTopPipeBounds()) || birdBounds.intersects(getBottomPipeBounds())) {
+            System.out.println("Collision detected");
             return true;
         } else {
             return false;
