@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 import javax.swing.*;
 
@@ -39,10 +40,10 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
     }
 
     // Pipes
-    int pipeX = boardWidth;
-    int pipeY = 0;
-    final int pipeWidth = 64;
-    final int pipeHeight = 512;
+    private int pipeX = boardWidth;
+    private int pipeY = 0;
+    private final int pipeWidth = 64;
+    private final int pipeHeight = 512;
 
     class Pipe {
         int x = pipeX;
@@ -61,9 +62,7 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
 
     // game logic
     Bird bird;
-    int velocityX = -4;
-    int velocityY = 0;
-    int gravity = 1;
+    private int velocityY = 0;
     Random rand = new Random();
 
     ArrayList<Pipe> topPipes;
@@ -79,10 +78,10 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
         addKeyListener(this);
 
         //load images
-        backgroundImage = new ImageIcon(getClass().getResource("Assets/flappybirdbg.png")).getImage();
-        birdImage = new ImageIcon(getClass().getResource("Assets/flappybird.png")).getImage();
-        topPipeImage = new ImageIcon(getClass().getResource("Assets/toppipe.png")).getImage();
-        bottomPipeImage = new ImageIcon(getClass().getResource("Assets/bottompipe.png")).getImage();
+        backgroundImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("Assets/flappybirdbg.png"))).getImage();
+        birdImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("Assets/flappybird.png"))).getImage();
+        topPipeImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("Assets/toppipe.png"))).getImage();
+        bottomPipeImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("Assets/bottompipe.png"))).getImage();
 
         // bird
         bird = new Bird(birdImage);
@@ -90,12 +89,7 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
         bottomPipes = new ArrayList<>();
 
         //place pipes timer
-        placePipesTimer = new Timer(2000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                placePipes();
-            }
-        });
+        placePipesTimer = new Timer(2000, _ -> placePipes());
 
         placePipesTimer.start();
 
@@ -144,6 +138,7 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
 
     public void move() {
         // update x and y of objects
+        int gravity = 1;
         velocityY += gravity;
         bird.y += velocityY;
         bird.y = Math.max(0, bird.y);
@@ -152,6 +147,7 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
         for (int i = 0; i < topPipes.size(); i++) {
             Pipe topPipe = topPipes.get(i);
             Pipe bottomPipe = bottomPipes.get(i);
+            int velocityX = -4;
             topPipe.x += velocityX;
             bottomPipe.x += velocityX;
             if (!topPipe.passed && bird.x > topPipe.x) {
@@ -165,7 +161,8 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
     public void actionPerformed(ActionEvent e) {
         move();
         repaint();
-        if (checkCollision()) {
+        boolean collisionDetected = checkCollision();
+        if (collisionDetected) {
             gameLoop.stop();
         }
         repaint();
@@ -195,7 +192,7 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
 
     public Rectangle getTopPipeBounds() {
         try {
-            Pipe pipe = topPipes.getLast();
+            Pipe pipe = topPipes.get(topPipes.size() - 2);
             return new Rectangle(pipe.x, pipe.y, pipe.width, pipe.height);
         } catch (Exception e) {
             return new Rectangle(0, 0, 0, 0);
@@ -204,7 +201,7 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
 
     public Rectangle getBottomPipeBounds() {
         try {
-            Pipe pipe = bottomPipes.getLast();
+            Pipe pipe = bottomPipes.get(bottomPipes.size() - 2);
             return new Rectangle(pipe.x, pipe.y, pipe.width, pipe.height);
         } catch (Exception e) {
             return new Rectangle(0, 0, 0, 0);
@@ -214,10 +211,6 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
     public boolean checkCollision() {
         Rectangle birdBounds = getBirdBounds();
 
-        if (birdBounds.intersects(getTopPipeBounds()) || birdBounds.intersects(getBottomPipeBounds()) || bird.y > boardHeight) {
-            return true;
-        } else {
-            return false;
-        }
+        return birdBounds.intersects(getTopPipeBounds()) || birdBounds.intersects(getBottomPipeBounds()) || bird.y > boardHeight;
     }
 }
