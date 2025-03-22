@@ -147,7 +147,6 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
         velocityY += gravity;
         bird.y += velocityY;
         bird.y = Math.max(0, bird.y);
-        bird.y = Math.min(boardHeight - birdHeight, bird.y);
 
         // move pipes
         for (int i = 0; i < topPipes.size(); i++) {
@@ -215,7 +214,7 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
     public boolean checkCollision() {
         Rectangle birdBounds = getBirdBounds();
 
-        if (birdBounds.intersects(getTopPipeBounds()) || birdBounds.intersects(getBottomPipeBounds())) {
+        if (birdBounds.intersects(getTopPipeBounds()) || birdBounds.intersects(getBottomPipeBounds()) || bird.y > boardHeight) {
             return true;
         } else {
             return false;
