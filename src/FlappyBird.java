@@ -133,6 +133,12 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
         g.setFont(new Font("Arial", Font.BOLD, 20));
         g.setColor(Color.WHITE);
         g.drawString("Score: " + score, 10, 30);
+        if (checkCollision()) {
+            g.setFont(new Font("Arial", Font.BOLD, 30));
+            FontMetrics fm = g.getFontMetrics();
+            int stringXPos = (boardWidth - fm.stringWidth("You Died!")) / 2;
+            g.drawString("You Died!", stringXPos, 200);
+        }
 
     }
 
@@ -161,8 +167,8 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
     public void actionPerformed(ActionEvent e) {
         move();
         repaint();
-        boolean collisionDetected = checkCollision();
-        if (collisionDetected) {
+//        boolean collisionDetected = checkCollision();
+        if (checkCollision()) {
             gameLoop.stop();
         }
         repaint();
