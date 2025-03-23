@@ -22,6 +22,8 @@ public class Menu extends JPanel {
         startButton.setBackground(Color.BLUE);
         startButton.setFont(new Font("Arial", Font.PLAIN, 20));
         startButton.setForeground(Color.white);
+        startButton.setLayout(new FlowLayout());
+
 
         instructionButton = new JButton("Instructions");
         instructionButton.setBackground(Color.BLUE);
@@ -45,7 +47,7 @@ public class Menu extends JPanel {
         instructionButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // remove menu and start game
+                // open instructions
                 JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(Menu.this);
                 frame.remove(Menu.this);
                 Instructions instructions = new Instructions();
@@ -59,6 +61,9 @@ public class Menu extends JPanel {
         gbc.gridy = 0;
 
         add(startButton, gbc);
+
+        gbc.gridy = 1;
+        add(instructionButton, gbc);
     }
 
     public void paintComponent(Graphics g) {

@@ -5,7 +5,6 @@ import java.util.Objects;
 import java.util.Random;
 import javax.swing.*;
 
-// inherit from JPanel
 public class FlappyBird extends JPanel implements ActionListener, KeyListener {
     private final int boardWidth = 360;
     private final int boardHeight = 640;
@@ -21,11 +20,12 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
     private final int birdHeight = 24;
 
     // Bird starting position
-    private int birdX = boardWidth / 8;
-    private int birdY = boardWidth / 2;
+    private final int birdX = boardWidth / 8;
+    private final int birdY = boardWidth / 2;
 
     private int score = 0;
 
+    private JButton retryButton;
 
     class Bird {
         int x = birdX;
@@ -40,8 +40,8 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
     }
 
     // Pipes
-    private int pipeX = boardWidth;
-    private int pipeY = 0;
+    private final int pipeX = boardWidth;
+    private final int pipeY = 0;
     private final int pipeWidth = 64;
     private final int pipeHeight = 512;
 
@@ -71,34 +71,53 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
     Timer gameLoop;
     Timer placePipesTimer;
 
-
     FlappyBird() {
         setPreferredSize(new Dimension(boardWidth, boardHeight));
         setFocusable(true);
         addKeyListener(this);
 
-        //load images
+        // Retry button
+        retryButton = new JButton("Retry");
+        retryButton.setBackground(Color.RED);
+        retryButton.setFont(new Font("Arial", Font.PLAIN, 20));
+        retryButton.setForeground(Color.white);
+        retryButton.addActionListener(e -> restartGame());
+        retryButton.setLocation(boardWidth, boardHeight);
+
+        // Load images
         backgroundImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("Assets/flappybirdbg.png"))).getImage();
         birdImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("Assets/flappybird.png"))).getImage();
         topPipeImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("Assets/toppipe.png"))).getImage();
         bottomPipeImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("Assets/bottompipe.png"))).getImage();
 
-        // bird
+        // Bird
         bird = new Bird(birdImage);
         topPipes = new ArrayList<>();
         bottomPipes = new ArrayList<>();
 
-        //place pipes timer
+        // Place pipes timer
         placePipesTimer = new Timer(2000, _ -> placePipes());
-
         placePipesTimer.start();
 
-        // game timer
+        // Game loop timer
         gameLoop = new Timer(1000 / 60, this);
         gameLoop.start();
     }
 
-    // we want to place the bottom pipe at topPipe.y + topPipe.height + gap
+    // Restart the game
+    private void restartGame() {
+        remove(retryButton);
+        score = 0;
+        bird.y = birdY;
+        velocityY = 0;
+        topPipes.clear();
+        bottomPipes.clear();
+        gameLoop.start();
+        placePipesTimer.start();
+        repaint();
+    }
+
+    // Place pipes
     public void placePipes() {
         Pipe topPipe = new Pipe(topPipeImage);
         Pipe bottomPipe = new Pipe(bottomPipeImage);
@@ -114,15 +133,13 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
     }
 
     public void draw(Graphics g) {
-
-        // draw background image
+        // Draw background image
         g.drawImage(backgroundImage, 0, 0, boardWidth, boardHeight, null);
 
-        // draw background image
+        // Draw bird
         g.drawImage(birdImage, bird.x, bird.y, birdWidth, birdHeight, null);
 
-
-        // draw pipes
+        // Draw pipes
         for (int i = 0; i < topPipes.size(); i++) {
             Pipe topPipe = topPipes.get(i);
             Pipe bottomPipe = bottomPipes.get(i);
@@ -130,26 +147,28 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
             g.drawImage(bottomPipeImage, topPipe.x, bottomPipe.y, bottomPipe.width, bottomPipe.height, null);
         }
 
+        // Draw score
         g.setFont(new Font("Arial", Font.BOLD, 20));
         g.setColor(Color.WHITE);
         g.drawString("Score: " + score, 10, 30);
+
+        // Draw "You Died!" message
         if (checkCollision()) {
             g.setFont(new Font("Arial", Font.BOLD, 30));
             FontMetrics fm = g.getFontMetrics();
             int stringXPos = (boardWidth - fm.stringWidth("You Died!")) / 2;
             g.drawString("You Died!", stringXPos, 200);
         }
-
     }
 
     public void move() {
-        // update x and y of objects
+        // Update x and y of objects
         int gravity = 1;
         velocityY += gravity;
         bird.y += velocityY;
         bird.y = Math.max(0, bird.y);
 
-        // move pipes
+        // Move pipes
         for (int i = 0; i < topPipes.size(); i++) {
             Pipe topPipe = topPipes.get(i);
             Pipe bottomPipe = bottomPipes.get(i);
@@ -167,11 +186,17 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
     public void actionPerformed(ActionEvent e) {
         move();
         repaint();
-//        boolean collisionDetected = checkCollision();
         if (checkCollision()) {
             gameLoop.stop();
+            placePipesTimer.stop();
+            GridBagConstraints c = new GridBagConstraints();
+            c.insets = new Insets(10, 10, 10, 10);
+            c.gridx = 0;
+            c.gridy = 5;
+            add(retryButton, c);
+            revalidate();
+            repaint();
         }
-        repaint();
     }
 
     @Override
@@ -183,13 +208,10 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
-
     }
-
 
     @Override
     public void keyReleased(KeyEvent e) {
-
     }
 
     public Rectangle getBirdBounds() {
@@ -216,7 +238,6 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener {
 
     public boolean checkCollision() {
         Rectangle birdBounds = getBirdBounds();
-
         return birdBounds.intersects(getTopPipeBounds()) || birdBounds.intersects(getBottomPipeBounds()) || bird.y > boardHeight;
     }
 }
